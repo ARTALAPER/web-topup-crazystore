@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecsa - Bio & AI Assistant</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* Smooth fade-in and slide-up animation for the main card */
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fade-in {
+            animation: fadeSlideUp 0.8s ease-out forwards;
+        }
+
+        /* Hover effect for buttons */
+        .btn-hover {
+            transition: all 0.3s ease;
+        }
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Chat modal animations */
+        .modal-enter {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+        }
+        .modal-enter-active {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* Custom scrollbar for chat */
+        .chat-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 4px;
+        }
+        .chat-scroll::-webkit-scrollbar-thumb {
+            background: #d1d5db; 
+            border-radius: 4px;
+        }
+        .chat-scroll::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af; 
+        }
+
+        /* Typing indicator animation */
+        .typing-dot {
+            animation: typing 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4 font-sans text-gray-800">
+
+    <!-- Main Container -->
+    <div class="max-w-sm w-full animate-fade-in">
+        
+        <!-- Profile Section -->
+        <div class="text-center mb-8">
+            <!-- Profile Picture with Automatic Fallback if Unicode Name fails -->
+            <img id="profilePic"
+                 src="%F0%9D%90%9E%F0%9D%90%A2%F0%9D%90%AB%F0%9D%90%A5%F0%9D%90%A2%F0%9D%90%AC%F0%93%8F%B2%20%20%CC%87%20%20%CC%A7%20%E2%8A%B9.jpeg" 
+                 alt="Lecsa's Profile Picture" 
+                 onerror="handleImageError(this)"
+                 class="w-28 h-28 rounded-full mx-auto mb-5 border-2 border-white shadow-md object-cover transition-all duration-300">
+            
+            <!-- Name & Bio -->
+            <h1 class="text-3xl font-light tracking-wide text-gray-900 mb-2">Lecsa</h1>
+            <p class="text-gray-500 text-sm font-light px-4">
+                Welcome to my space. Let's connect!
+            </p>
+        </div>
+
+        <!-- Links Container -->
+        <div class="flex flex-col gap-4">
+            
+            <!-- WhatsApp Button -->
+            <a href="https://wa.me/6281212770909" target="_blank" rel="noopener noreferrer" 
+               class="btn-hover bg-white text-gray-800 py-4 px-6 rounded-2xl flex items-center justify-center gap-3 shadow-sm border border-gray-100">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.125-.397-.18-1.22-.45-2.261-1.385-1.018-.913-1.603-1.996-1.79-2.316-.188-.321-.02-.494.137-.654.141-.142.308-.36.463-.54.155-.18.205-.308.309-.514.103-.205.051-.385-.026-.54-.077-.154-.687-1.656-.941-2.268-.246-.591-.497-.511-.681-.52-.178-.009-.384-.012-.589-.012-.206 0-.539.077-.822.385-.283.308-1.08 1.054-1.08 2.57 0 1.517 1.105 2.982 1.259 3.188.155.205 2.172 3.313 5.259 4.646.735.319 1.309.508 1.758.65.742.235 1.417.202 1.947.122.593-.089 1.821-.744 2.079-1.465.256-.721.256-1.34.18-1.465-.077-.128-.283-.205-.591-.36z"/>
+                </svg>
+                <span class="font-medium tracking-wide">WhatsApp</span>
+            </a>
+
+            <!-- AI Assistant Button -->
+            <button onclick="openChat()" 
+               class="btn-hover bg-gray-900 text-white py-4 px-6 rounded-2xl flex items-center justify-center gap-3 shadow-sm mt-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <span class="font-medium tracking-wide">Ask AI Assistant ✨</span>
+            </button>
+
+        </div>
+    </div>
+
+    <!-- Chat Modal Overlay (Hidden by default) -->
+    <div id="chatModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        
+        <!-- Chat Container -->
+        <div id="chatContainer" class="bg-white w-full sm:w-[400px] h-[80vh] sm:h-[600px] sm:rounded-3xl rounded-t-3xl shadow-2xl flex flex-col transform translate-y-full sm:translate-y-10 transition-transform duration-300">
+            
+            <!-- Chat Header -->
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-white sm:rounded-t-3xl rounded-t-3xl">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gray-900 flex items-center justify-center text-white text-xs">AI</div>
+                    <div>
+                        <h3 class="font-medium text-gray-800">Lecsa's Assistant</h3>
+                        <p class="text-xs text-green-500 flex items-center gap-1">
+                            <span class="w-2 h-2 rounded-full bg-green-500 inline-block animate-pulse"></span> Online
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-1">
+                    <!-- Config / Settings Gear Button -->
+                    <button onclick="toggleSettings()" class="text-gray-400 hover:text-gray-700 transition-colors p-2" title="Pengaturan API Key">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </button>
+                    <!-- Close Button -->
+                    <button onclick="closeChat()" class="text-gray-400 hover:text-gray-700 transition-colors p-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Settings Panel (Collapsible) -->
+            <div id="settingsPanel" class="hidden px-6 py-4 border-b border-gray-100 bg-gray-50 text-xs transition-all duration-300">
+                <p class="font-semibold text-gray-700 mb-1">Konfigurasi Gemini API Key</p>
+                <p class="text-gray-500 mb-3 leading-relaxed">Website ini dipasang di Vercel pribadi Anda. Masukkan Gemini API Key Anda agar AI aktif kembali:</p>
+                <div class="flex gap-2">
+                    <input type="password" id="apiKeyInput" placeholder="Masukkan API Key Anda (AIzaSy...)" 
+                           class="flex-1 px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-gray-400 text-xs">
+                    <button onclick="saveApiKey()" class="bg-gray-900 text-white px-4 py-2 rounded-xl font-medium hover:bg-gray-800 transition-colors">Simpan</button>
+                </div>
+                <div id="settingsMessage" class="hidden mt-2 text-green-600 font-medium"></div>
+                <p class="mt-2 text-[10px] text-gray-400 leading-relaxed">Belum punya key? Dapatkan gratis dalam 1 menit di <a href="https://aistudio.google.com/" target="_blank" class="text-blue-500 underline">Google AI Studio</a>.</p>
+            </div>
+
+            <!-- Chat Messages Area -->
+            <div id="chatMessages" class="flex-1 overflow-y-auto p-6 flex flex-col gap-4 chat-scroll bg-gray-50">
+                <!-- Initial Greeting -->
+                <div class="flex flex-col items-start">
+                    <div class="bg-white text-gray-800 px-4 py-3 rounded-2xl rounded-tl-sm shadow-sm max-w-[85%] text-sm leading-relaxed border border-gray-100">
+                        Hi! I'm Lecsa's AI assistant. 👋 <br><br>You can ask me questions about Lecsa, or I can help you draft a message before you reach out to her on WhatsApp. How can I help?
+                    </div>
+                </div>
+                
+                <!-- Notice if API Key is missing -->
+                <div id="setupNotice" class="hidden p-4 bg-amber-50 border border-amber-100 rounded-2xl text-xs text-amber-800 leading-relaxed my-2">
+                    <div class="flex gap-2">
+                        <span class="text-base">⚙️</span>
+                        <div>
+                            <p class="font-semibold mb-1">Butuh API Key untuk Pengaktifan AI</p>
+                            <p class="mb-2 text-gray-600">Karena halaman ini berjalan secara live di Vercel Anda sendiri, silakan masukkan Gemini API Key Anda terlebih dahulu.</p>
+                            <button onclick="toggleSettings()" class="bg-amber-600 text-white font-semibold px-3 py-1.5 rounded-lg hover:bg-amber-700 transition-all">Klik untuk Memasukkan API Key</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input Area -->
+            <div class="p-4 bg-white border-t border-gray-100 sm:rounded-b-3xl">
+                <form id="chatForm" class="flex gap-2 relative">
+                    <input type="text" id="userInput" placeholder="Type a message..." 
+                           class="flex-1 bg-gray-100 text-sm text-gray-800 rounded-full pl-5 pr-12 py-3 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-all"
+                           autocomplete="off" required>
+                    <button type="submit" id="sendBtn" class="absolute right-2 top-1.5 bottom-1.5 w-9 h-9 bg-gray-900 text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform translate-x-px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                        </svg>
+                    </button>
+                </form>
+                <div id="errorBox" class="hidden mt-2 text-xs text-red-500 text-center"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // PFP Fallback mechanism
+        function handleImageError(image) {
+            // Unsplash placeholder if the local Unicode filename isn't served properly on Vercel
+            image.onerror = null; // Prevent endless loop
+            image.src = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=256&h=256";
+            console.log("Original unicode image failed to load. Fallback aesthetic profile image used.");
+        }
+
+        // Try to decode original filename if it can load that way
+        window.addEventListener('DOMContentLoaded', () => {
+            const profilePic = document.getElementById('profilePic');
+            const originalPath = "𝐞𝐢𝐫𝐥𝐢𝐬𓏲  ֹ  ۪ ⊹.jpeg";
+            
+            // We set the src dynamically as decoded and fallback correctly
+            const img = new Image();
+            img.onload = function() {
+                profilePic.src = originalPath;
+            };
+            img.onerror = function() {
+                // If unencoded fails, try encoded path
+                const encodedPath = encodeURIComponent(originalPath);
+                const testImg2 = new Image();
+                testImg2.onload = function() {
+                    profilePic.src = encodedPath;
+                };
+                testImg2.onerror = function() {
+                    // Fallback handled by onerror attribute on HTML
+                };
+                testImg2.src = encodedPath;
+            };
+            img.src = originalPath;
+        });
+
+        // Modal & AI Logic
+        const chatModal = document.getElementById('chatModal');
+        const chatContainer = document.getElementById('chatContainer');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatForm = document.getElementById('chatForm');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const errorBox = document.getElementById('errorBox');
+        const settingsPanel = document.getElementById('settingsPanel');
+        const apiKeyInput = document.getElementById('apiKeyInput');
+        const settingsMessage = document.getElementById('settingsMessage');
+        const setupNotice = document.getElementById('setupNotice');
+
+        // Load cached API key dari localStorage atau gunakan key default yang Anda berikan
+        let userApiKey = localStorage.getItem('gemini_api_key') || "AQ.Ab8RN6KL5MsN5-dD0xA7lDwoabeJY1QDnKVtc-NbcMrkYxg-RQ";
+        if (userApiKey) {
+            apiKeyInput.value = userApiKey;
+        }
+
+        function openChat() {
+            chatModal.classList.remove('hidden');
+            void chatModal.offsetWidth; 
+            chatModal.classList.add('opacity-100');
+            chatModal.classList.remove('opacity-0');
+            chatContainer.classList.remove('translate-y-full', 'sm:translate-y-10');
+            chatContainer.classList.add('translate-y-0');
+            
+            // Check if API key is missing
+            if (!userApiKey) {
+                setupNotice.classList.remove('hidden');
+            } else {
+                setupNotice.classList.add('hidden');
+            }
+            userInput.focus();
+        }
+
+        function closeChat() {
+            chatModal.classList.remove('opacity-100');
+            chatModal.classList.add('opacity-0');
+            chatContainer.classList.remove('translate-y-0');
+            chatContainer.classList.add('translate-y-full', 'sm:translate-y-10');
+            setTimeout(() => {
+                chatModal.classList.add('hidden');
+            }, 300);
+        }
+
+        function toggleSettings() {
+            settingsPanel.classList.toggle('hidden');
+        }
+
+        function saveApiKey() {
+            const key = apiKeyInput.value.trim();
+            if (key) {
+                localStorage.setItem('gemini_api_key', key);
+                userApiKey = key;
+                setupNotice.classList.add('hidden');
+                settingsMessage.textContent = "API Key berhasil disimpan!";
+                settingsMessage.classList.remove('hidden');
+                setTimeout(() => {
+                    settingsMessage.classList.add('hidden');
+                    settingsPanel.classList.add('hidden');
+                }, 1500);
+            } else {
+                localStorage.removeItem('gemini_api_key');
+                userApiKey = "";
+                setupNotice.classList.remove('hidden');
+                settingsMessage.textContent = "API Key dihapus.";
+                settingsMessage.classList.remove('hidden');
+            }
+        }
+
+        chatModal.addEventListener('click', (e) => {
+            if (e.target === chatModal) {
+                closeChat();
+            }
+        });
+
+        // Gemini API Configs
+        const modelName = "gemini-3-flash-preview";
+        
+        const systemInstruction = {
+            parts: [{ 
+                text: "You are a helpful, friendly, and concise AI assistant for a person named Lecsa. Your job is to interact with visitors on her bio link page. You can answer generic questions politely, but mainly you should encourage them to contact her via WhatsApp (number: +6281212770909) and help them draft a good introductory message if they are unsure what to say. Keep responses relatively short and visually clean. Use emojis appropriately." 
+            }]
+        };
+
+        let chatHistory = [];
+
+        function appendMessage(text, isUser) {
+            const wrapper = document.createElement('div');
+            wrapper.className = `flex flex-col ${isUser ? 'items-end' : 'items-start'} mb-2`;
+            
+            const bubble = document.createElement('div');
+            bubble.className = `px-4 py-3 text-sm leading-relaxed max-w-[85%] shadow-sm ${
+                isUser 
+                ? 'bg-gray-900 text-white rounded-2xl rounded-tr-sm' 
+                : 'bg-white text-gray-800 rounded-2xl rounded-tl-sm border border-gray-100'
+            }`;
+            
+            let formattedText = text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            bubble.innerHTML = formattedText;
+            
+            wrapper.appendChild(bubble);
+            chatMessages.appendChild(wrapper);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const wrapper = document.createElement('div');
+            wrapper.id = 'typingIndicator';
+            wrapper.className = `flex flex-col items-start mb-2`;
+            
+            const bubble = document.createElement('div');
+            bubble.className = `px-4 py-4 text-sm max-w-[85%] shadow-sm bg-white rounded-2xl rounded-tl-sm border border-gray-100 flex gap-1 items-center h-10`;
+            
+            bubble.innerHTML = `
+                <div class="w-1.5 h-1.5 bg-gray-400 rounded-full typing-dot"></div>
+                <div class="w-1.5 h-1.5 bg-gray-400 rounded-full typing-dot"></div>
+                <div class="w-1.5 h-1.5 bg-gray-400 rounded-full typing-dot"></div>
+            `;
+            
+            wrapper.appendChild(bubble);
+            chatMessages.appendChild(wrapper);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
+        async function fetchGeminiResponse(userText) {
+            // Get current API key (user input saved or editor fallback)
+            const activeKey = userApiKey || "";
+            if (!activeKey) {
+                throw new Error("API Key kosong. Silakan atur terlebih dahulu melalui ikon pengaturan ⚙️.");
+            }
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${activeKey}`;
+
+            chatHistory.push({
+                role: "user",
+                parts: [{ text: userText }]
+            });
+
+            const payload = {
+                systemInstruction: systemInstruction,
+                contents: chatHistory,
+            };
+
+            let delay = 1000;
+            let retries = 3;
+
+            while (retries > 0) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        if (response.status === 429) {
+                            retries--;
+                            await new Promise(res => setTimeout(res, delay));
+                            delay *= 2;
+                            continue;
+                        }
+                        const errText = await response.text();
+                        console.error("Gemini Error Details:", errText);
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    
+                    if (result.candidates && result.candidates.length > 0) {
+                        const aiText = result.candidates[0].content.parts[0].text;
+                        
+                        chatHistory.push({
+                            role: "model",
+                            parts: [{ text: aiText }]
+                        });
+                        
+                        return aiText;
+                    } else {
+                        throw new Error("No response generated.");
+                    }
+                } catch (error) {
+                    console.error("API Error:", error);
+                    if (retries === 1) throw error; 
+                    retries--;
+                    await new Promise(res => setTimeout(res, delay));
+                    delay *= 2;
+                }
+            }
+        }
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            errorBox.classList.add('hidden');
+            userInput.value = '';
+            userInput.disabled = true;
+            sendBtn.disabled = true;
+            sendBtn.classList.add('opacity-50');
+
+            appendMessage(text, true);
+            showTypingIndicator();
+
+            try {
+                const aiResponseText = await fetchGeminiResponse(text);
+                removeTypingIndicator();
+                appendMessage(aiResponseText, false);
+            } catch (error) {
+                removeTypingIndicator();
+                
+                // Friendly informative error message
+                let errorMsg = "Oops, something went wrong connecting to the AI. Please try again.";
+                if (!userApiKey) {
+                    errorMsg = "API Key belum terpasang. Klik ikon ⚙️ di kanan atas chat untuk memasukkan Gemini API Key gratis Anda.";
+                    settingsPanel.classList.remove('hidden'); // Automatically open settings if missing
+                } else if (error.message.includes("400") || error.message.includes("403")) {
+                    errorMsg = "API Key tidak valid atau salah. Silakan periksa kembali key Anda lewat tombol ⚙️.";
+                }
+                
+                errorBox.textContent = errorMsg;
+                errorBox.classList.remove('hidden');
+                chatHistory.pop(); 
+            } finally {
+                userInput.disabled = false;
+                sendBtn.disabled = false;
+                sendBtn.classList.remove('opacity-50');
+                userInput.focus();
+            }
+        });
+    </script>
+</body>
+</html>
