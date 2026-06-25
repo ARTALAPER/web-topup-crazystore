@@ -3,20 +3,352 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CrazyStore Top Up</title>
+    <title>Lecsa - Bio & AI Assistant</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 20px; background-color: #f4f4f4; }
-        .card { background: white; padding: 20px; border-radius: 10px; max-width: 400px; margin: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        h1 { color: #333; }
-        .btn { display: block; background: #0070f3; color: white; padding: 10px; margin: 10px 0; text-decoration: none; border-radius: 5px; }
+        /* Smooth fade-in and slide-up animation for the main card */
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fade-in {
+            animation: fadeSlideUp 0.8s ease-out forwards;
+        }
+
+        /* Hover effect for buttons */
+        .btn-hover {
+            transition: all 0.3s ease;
+        }
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Chat modal animations */
+        .modal-enter {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+        }
+        .modal-enter-active {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* Custom scrollbar for chat */
+        .chat-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 4px;
+        }
+        .chat-scroll::-webkit-scrollbar-thumb {
+            background: #d1d5db; 
+            border-radius: 4px;
+        }
+        .chat-scroll::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af; 
+        }
+
+        /* Typing indicator animation */
+        .typing-dot {
+            animation: typing 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
     </style>
 </head>
-<body>
-    <div class="card">
-        <h1>CrazyStore</h1>
-        <p>Selamat datang di layanan top up kami.</p>
-        <a href="#" class="btn">Top Up Diamond</a>
-        <a href="#" class="btn">Top Up Voucher</a>
+
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4 font-sans text-gray-800">
+
+    <!-- Main Container -->
+    <div class="max-w-sm w-full animate-fade-in">
+        
+        <!-- Profile Section -->
+        <div class="text-center mb-8">
+            <!-- Profile Picture -->
+            <img src="𝐞𝐢𝐫𝐥𝐢𝐬𓏲  ֹ  ۪ ⊹.jpeg" 
+                 alt="Lecsa's Profile Picture" 
+                 class="w-28 h-28 rounded-full mx-auto mb-5 border-2 border-white shadow-md object-cover">
+            
+            <!-- Name & Bio -->
+            <h1 class="text-3xl font-light tracking-wide text-gray-900 mb-2">Lecsa</h1>
+            <p class="text-gray-500 text-sm font-light px-4">
+                Welcome to my space. Let's connect!
+            </p>
+        </div>
+
+        <!-- Links Container -->
+        <div class="flex flex-col gap-4">
+            
+            <!-- WhatsApp Button -->
+            <a href="https://wa.me/6281212770909" target="_blank" rel="noopener noreferrer" 
+               class="btn-hover bg-white text-gray-800 py-4 px-6 rounded-2xl flex items-center justify-center gap-3 shadow-sm border border-gray-100">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.125-.397-.18-1.22-.45-2.261-1.385-1.018-.913-1.603-1.996-1.79-2.316-.188-.321-.02-.494.137-.654.141-.142.308-.36.463-.54.155-.18.205-.308.309-.514.103-.205.051-.385-.026-.54-.077-.154-.687-1.656-.941-2.268-.246-.591-.497-.511-.681-.52-.178-.009-.384-.012-.589-.012-.206 0-.539.077-.822.385-.283.308-1.08 1.054-1.08 2.57 0 1.517 1.105 2.982 1.259 3.188.155.205 2.172 3.313 5.259 4.646.735.319 1.309.508 1.758.65.742.235 1.417.202 1.947.122.593-.089 1.821-.744 2.079-1.465.256-.721.256-1.34.18-1.465-.077-.128-.283-.205-.591-.36z"/>
+                </svg>
+                <span class="font-medium tracking-wide">WhatsApp</span>
+            </a>
+
+            <!-- AI Assistant Button -->
+            <button onclick="openChat()" 
+               class="btn-hover bg-gray-900 text-white py-4 px-6 rounded-2xl flex items-center justify-center gap-3 shadow-sm mt-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <span class="font-medium tracking-wide">Ask AI Assistant ✨</span>
+            </button>
+
+        </div>
     </div>
+
+    <!-- Chat Modal Overlay (Hidden by default) -->
+    <div id="chatModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        
+        <!-- Chat Container -->
+        <div id="chatContainer" class="bg-white w-full sm:w-[400px] h-[80vh] sm:h-[600px] sm:rounded-3xl rounded-t-3xl shadow-2xl flex flex-col transform translate-y-full sm:translate-y-10 transition-transform duration-300">
+            
+            <!-- Chat Header -->
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-white sm:rounded-t-3xl rounded-t-3xl">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gray-900 flex items-center justify-center text-white text-xs">AI</div>
+                    <div>
+                        <h3 class="font-medium text-gray-800">Lecsa's Assistant</h3>
+                        <p class="text-xs text-green-500 flex items-center gap-1">
+                            <span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span> Online
+                        </p>
+                    </div>
+                </div>
+                <button onclick="closeChat()" class="text-gray-400 hover:text-gray-700 transition-colors p-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Chat Messages Area -->
+            <div id="chatMessages" class="flex-1 overflow-y-auto p-6 flex flex-col gap-4 chat-scroll bg-gray-50">
+                <!-- Initial Greeting -->
+                <div class="flex flex-col items-start">
+                    <div class="bg-white text-gray-800 px-4 py-3 rounded-2xl rounded-tl-sm shadow-sm max-w-[85%] text-sm leading-relaxed border border-gray-100">
+                        Hi! I'm Lecsa's AI assistant. 👋 <br><br>You can ask me questions about Lecsa, or I can help you draft a message before you reach out to her on WhatsApp. How can I help?
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input Area -->
+            <div class="p-4 bg-white border-t border-gray-100 sm:rounded-b-3xl">
+                <form id="chatForm" class="flex gap-2 relative">
+                    <input type="text" id="userInput" placeholder="Type a message..." 
+                           class="flex-1 bg-gray-100 text-sm text-gray-800 rounded-full pl-5 pr-12 py-3 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-all"
+                           autocomplete="off" required>
+                    <button type="submit" id="sendBtn" class="absolute right-2 top-1.5 bottom-1.5 w-9 h-9 bg-gray-900 text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform translate-x-px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                        </svg>
+                    </button>
+                </form>
+                <div id="errorBox" class="hidden mt-2 text-xs text-red-500 text-center"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal UI Logic
+        const chatModal = document.getElementById('chatModal');
+        const chatContainer = document.getElementById('chatContainer');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatForm = document.getElementById('chatForm');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const errorBox = document.getElementById('errorBox');
+
+        function openChat() {
+            chatModal.classList.remove('hidden');
+            // Trigger reflow to ensure transitions work
+            void chatModal.offsetWidth; 
+            chatModal.classList.add('opacity-100');
+            chatModal.classList.remove('opacity-0');
+            chatContainer.classList.remove('translate-y-full', 'sm:translate-y-10');
+            chatContainer.classList.add('translate-y-0');
+            userInput.focus();
+        }
+
+        function closeChat() {
+            chatModal.classList.remove('opacity-100');
+            chatModal.classList.add('opacity-0');
+            chatContainer.classList.remove('translate-y-0');
+            chatContainer.classList.add('translate-y-full', 'sm:translate-y-10');
+            setTimeout(() => {
+                chatModal.classList.add('hidden');
+            }, 300); // match transition duration
+        }
+
+        // Close modal when clicking outside the chat container
+        chatModal.addEventListener('click', (e) => {
+            if (e.target === chatModal) {
+                closeChat();
+            }
+        });
+
+        // Gemini API Setup
+        const apiKey = ""; // API Key is injected by the Canvas environment
+        const modelName = "gemini-3-flash-preview";
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+        
+        const systemInstruction = {
+            parts: [{ 
+                text: "You are a helpful, friendly, and concise AI assistant for a person named Lecsa. Your job is to interact with visitors on her bio link page. You can answer generic questions politely, but mainly you should encourage them to contact her via WhatsApp (number: +6281212770909) and help them draft a good introductory message if they are unsure what to say. Keep responses relatively short and visually clean. Use emojis appropriately." 
+            }]
+        };
+
+        let chatHistory = [];
+
+        function appendMessage(text, isUser) {
+            const wrapper = document.createElement('div');
+            wrapper.className = `flex flex-col ${isUser ? 'items-end' : 'items-start'} mb-2`;
+            
+            const bubble = document.createElement('div');
+            bubble.className = `px-4 py-3 text-sm leading-relaxed max-w-[85%] shadow-sm ${
+                isUser 
+                ? 'bg-gray-900 text-white rounded-2xl rounded-tr-sm' 
+                : 'bg-white text-gray-800 rounded-2xl rounded-tl-sm border border-gray-100'
+            }`;
+            
+            // Render basic markdown (bold) and line breaks
+            let formattedText = text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            bubble.innerHTML = formattedText;
+            
+            wrapper.appendChild(bubble);
+            chatMessages.appendChild(wrapper);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const wrapper = document.createElement('div');
+            wrapper.id = 'typingIndicator';
+            wrapper.className = `flex flex-col items-start mb-2`;
+            
+            const bubble = document.createElement('div');
+            bubble.className = `px-4 py-4 text-sm max-w-[85%] shadow-sm bg-white rounded-2xl rounded-tl-sm border border-gray-100 flex gap-1 items-center h-10`;
+            
+            bubble.innerHTML = `
+                <div class="w-1.5 h-1.5 bg-gray-400 rounded-full typing-dot"></div>
+                <div class="w-1.5 h-1.5 bg-gray-400 rounded-full typing-dot"></div>
+                <div class="w-1.5 h-1.5 bg-gray-400 rounded-full typing-dot"></div>
+            `;
+            
+            wrapper.appendChild(bubble);
+            chatMessages.appendChild(wrapper);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
+        async function fetchGeminiResponse(userText) {
+            // Add user message to history payload
+            chatHistory.push({
+                role: "user",
+                parts: [{ text: userText }]
+            });
+
+            const payload = {
+                systemInstruction: systemInstruction,
+                contents: chatHistory,
+            };
+
+            let delay = 1000;
+            let retries = 3;
+
+            while (retries > 0) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        if (response.status === 429) {
+                            retries--;
+                            await new Promise(res => setTimeout(res, delay));
+                            delay *= 2;
+                            continue;
+                        }
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    
+                    if (result.candidates && result.candidates.length > 0) {
+                        const aiText = result.candidates[0].content.parts[0].text;
+                        
+                        // Add model response to history
+                        chatHistory.push({
+                            role: "model",
+                            parts: [{ text: aiText }]
+                        });
+                        
+                        return aiText;
+                    } else {
+                        throw new Error("No response generated.");
+                    }
+                } catch (error) {
+                    console.error("API Error:", error);
+                    if (retries === 1) throw error; 
+                    retries--;
+                    await new Promise(res => setTimeout(res, delay));
+                    delay *= 2;
+                }
+            }
+        }
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            // Clear UI states
+            errorBox.classList.add('hidden');
+            userInput.value = '';
+            userInput.disabled = true;
+            sendBtn.disabled = true;
+            sendBtn.classList.add('opacity-50');
+
+            // Show user message
+            appendMessage(text, true);
+            showTypingIndicator();
+
+            try {
+                const aiResponseText = await fetchGeminiResponse(text);
+                removeTypingIndicator();
+                appendMessage(aiResponseText, false);
+            } catch (error) {
+                removeTypingIndicator();
+                errorBox.textContent = "Oops, something went wrong connecting to the AI. Please try again.";
+                errorBox.classList.remove('hidden');
+                // Remove the failed user message from history array so they can retry
+                chatHistory.pop(); 
+            } finally {
+                userInput.disabled = false;
+                sendBtn.disabled = false;
+                sendBtn.classList.remove('opacity-50');
+                userInput.focus();
+            }
+        });
+    </script>
 </body>
 </html>
